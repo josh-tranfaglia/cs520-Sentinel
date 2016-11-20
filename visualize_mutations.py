@@ -58,14 +58,29 @@ read_csv(path_to_killed_csv, mutant_id_status)
 
 mutant_id_and_output = {}
 for mutant_id, status in mutant_id_status.items():
-    # Trying to figure out how to call ./show_mutant.sh 145 from inside python
-    pdb.set_trace()
-    P = subprocess.Popen([path_to_show_mutant_sh_scrpt, mutant_id])
-    subprocess.call([path_to_show_mutant_sh_scrpt, mutant_id])
+    try:
+        P = subprocess.Popen([path_to_show_mutant_sh_scrpt, mutant_id], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except Exception as e:
+        raise "Please put '#!/bin/sh' in your shell script"
+    out, err = P.communicate()
+    mutant_id_and_output[mutant_id] = {"status": status, "output": out.decode("utf-8")}
 
-    p = subprocess.Popen([path_to_show_mutant_sh_scrpt, int(mutant_id)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    pdb.set_trace()
-    out, err = p.communicate()
+
+aggregated_mutant_output_file = open("aggregated_mutant_output.csv",'w')
+csv_writer = csv.writer(aggregated_mutant_output_file, delimiter=',')
+mutant_output_headers = ["MutantID", "Status", "Output"]
+csv_writer.writerow(mutant_output_headers)
+
+for mutant_id, result in mutant_id_and_output.items():
+    status = result["status"]
+    output = result["output"]
+    csv_writer.writerow([mutant_id, status, output])
+    print("For Mutant ID: " + mutant_id + ", Status: " + status + ", Output: ")
+    print("")
+    for string in output.split("\n"):
+        print(string)
+    print("")
+
 
 # ./mutation_results/killed.csv
 # ./show_mutant.sh
