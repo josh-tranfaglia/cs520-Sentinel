@@ -1,0 +1,14 @@
+/* CLASSES */
+.borderless td, .borderless th {
+	border: none;
+}
+
+.mutant-bg > li{
+	background-color: #f5f5f5;
+}
+
+.mutant-glyph {
+	padding-right: 5px;
+}
+
+/* ID's */

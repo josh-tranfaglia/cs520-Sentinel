@@ -18,7 +18,64 @@
 	</head>
 
 	<body>
-		<h1>Initial Commit</h1>
+		<!-- NAVBAR -->
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">CS 520 Sentinel</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">Mutants</a></li>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">All<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Live</a></li>
+							<li><a href="#">Killed</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<!-- END NAVBAR -->
+
+		<!-- INTERFACE -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="well well-sm">
+						<table class="table table-condensed borderless">
+							<thead>
+								<th>Summary</th>
+							</thead>
+							<tbody>
+								<tr><td>Mutants Generated: 5</td></tr>
+								<tr><td>Mutants Killed: 3</td></tr>
+								<tr><td>Mutants Living: 2</td></tr>
+								<tr><td>Run-time (seconds): 0.2</td></tr>
+							</tbody>
+						</table>
+					</div>
+					<ul class="list-group mutant-bg">
+						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#990000">KILLED</span></li>
+						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-down mutant-glyph"></span>Mutant 1 // <span style="color:#006600">LIVE</span>
+						<br><br>
+								<p>
+									Source: C:/usr/tmp/bin/module.java<br>
+									Line(s) Changed: 18<br><br>
+									SOURCE:<br>
+									<code style="color:black">if (a <= <span style="color:red">0</span> || b <= 0 || c <= 0) {</code><br><br>
+									MUTANT:<br>
+									<code style="color:black">if (a <= <span style="color:red">1</span> || b <= 0 || c <= 0) {</code>
+								</p>
+						</li>
+						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#990000">KILLED</span></li>
+						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#990000">KILLED</span></li>
+						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#006600">LIVE</span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- END INTERFACE -->
 	</body>
 
 </html>	
