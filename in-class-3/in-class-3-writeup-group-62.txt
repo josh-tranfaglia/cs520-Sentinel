@@ -1,0 +1,55 @@
+CS 520 IN CLASS EXERCISE 3
+12/1/16
+GROUP MEMBERS: Stephen Palagi, Omar Ismail, Alyssa Seifert, Joshua Tranfaglia
+
+In Class Exercise 3 - Writeup
+
+----- Debugging the 1st bug notes -----
+1.) From looking at just the test output for ant test, I was able to infer that the bug was happening in 
+the test case testThisWorkedAtSomePoint. The program seems to check if a piece of data is a number, but is
+being passed a string.
+2.) When looking at just the test case, it is clear where failing assertions are created, and specifically, 
+the fault is occuring at line 181 during this assertion:
+	assertFalse("isNumber(String) failed", NumberUtils.isNumber(val));
+
+----- Bug 1 solved! -----
+I was able to locate and fix the first bug.
+It was located on line 1410 of NumberUtils.java, where the method checks for the letter L. The comments for the code indicate
+that L is only a valid character if the number has no exponents and no decimal points. When changing the check from:
+	
+	return foundDigit && !hasExp;
+
+	to:
+
+	if (!hasExp && !hasDecPoint) return foundDigit;
+
+
+----- Debugging the 2nd bug notes -----
+1.) From looking at just the test output I was able to infer that the bug was happening in the test case 
+testJavaVersionAsInt() in the file SystemUtilsTest2.java.
+
+----- Bug 2 solved! -----
+I was able to locate and fix the second bug.
+There were 2 separate causes of the bug. The first cause was the function toJavaVersionInt returning float not int.
+The second cause was in the toVersionInt function that the toJavaVersionInt method calls. The method is passed an array
+and performs a check to make sure it is not null. The bug lies within this check, as it does not account for arrays of 
+size 0. The original form:
+
+	if (javaVersions == NULL) return 0;
+
+	to:
+
+	if (javaVersions == NULL || javaVersions.length == 0) return 0;
+
+
+----- QUESTIONS TO ANSWER -----
+Bug1: were you able to infer the buggy class and buggy method from the test output? Briefly explain why or why not. If not, could the test be improved to make this inference easier?
+Bug1: what changes did you observe in the suspiciousness rankings/visualizations after minimizing the failing test? What might have caused these changes?
+Bug1: what information helped you to ultimately localize and fix the bug?
+Bug2: does the suspiciousness ranking list the buggy line? Briefly explain why or why not?
+Bug3: is this bug easier to localize because of the raised exception? Briefly explain why or why not?
+
+----- DELIVERABLES -----
+[] Your TestClass4.java that contains the minimized failing test case.
+[] The fixed source code files for the bugs that you localized and fixed.
+[x] A plain-text file with your answers to the questions above. Please list all group members on top of this file.
