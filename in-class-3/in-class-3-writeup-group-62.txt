@@ -42,6 +42,73 @@ size 0. The original form:
 	if (javaVersions == NULL || javaVersions.length == 0) return 0;
 
 
+
+----- Debugging the 3rd bug notes -----
+1) This bug is a little more tricky to figure out what the code was trying to
+do. Finding the fault was pretty easy. The test called
+`NumberUtils.createNumber` and quicly glancing the test cases, we observed that
+they were passing in 3 things: 
+  a) a sign (negative "-") or no sign
+  b) from the first character to the last character are numbers
+  c) the last character is an "l"
+
+  Investigating the `#createNumber` function inside "NumberUtils.java", we
+browsed to find the location in the code that evaluated the last character "l".
+This was the most logical step because it was the only unqiue part of creating a
+number based off a string"NumberUtils.java", we browsed to find the location in
+the code that evaluated the last character "l". This was the most logical step
+because it was the only unqiue part of creating a number based off a
+string.
+
+
+----- Bug 2 solved! -----
+* Finding the location of the bug was quick because of this line of code:
+```
+  if (!Character.isDigit(lastChar)) {
+    ...
+```
+
+The test failed because an error was thrown due to the evaluation of an if
+block to be false. The if block in question was this:
+
+```
+  if (dec == null
+      && exp == null
+      && isDigits(numeric.substring(1))
+      && (numeric.charAt(0) == '-' || Character.isDigit(numeric.charAt(0)))) {
+```
+This proved to be a little tricky because of the confusion as to the intention
+of the code. Was the code supposed to ensure that only three characters would be
+in the string? Taking the test as the source of truth, it made more sense that
+the code just wanted to have two logical checks
+  a) to allow if the first character is a negative sign
+  b) to make sure that every character from the first to the last (excluding
+"l") was a digit (assuming you allow for (a)).
+
+The solution was to create a loop to make this function more extendible and
+allow any length of a string to be passed in as input. Here is the solution:
+
+```
+  // numeric here is the string but without the last character, as observed a
+  // few lines above with thia few lines above with thia few lines above with 
+  // this line of code
+  // String numeric = str.substring(0, str.length() - 1);
+
+  boolean isNumericAllDigits = true;
+
+  if (numeric.charAt(0) == '-')
+    numeric = numeric.substring(1);
+
+  for(int i = 0; i < numeric.length(); i++)
+    isNumericAllDigits = Character.isDigit(numeric.charAt(i));
+
+  if (dec == null
+      && exp == null
+      && isNumericAllDigits) {
+```
+
+
+
 ----- QUESTIONS TO ANSWER -----
 Bug1: were you able to infer the buggy class and buggy method from the test output? Briefly explain why or why not. If not, could the test be improved to make this inference easier?
 Bug1: what changes did you observe in the suspiciousness rankings/visualizations after minimizing the failing test? What might have caused these changes?
