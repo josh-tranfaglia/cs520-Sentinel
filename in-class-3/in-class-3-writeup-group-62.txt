@@ -61,7 +61,7 @@ because it was the only unqiue part of creating a number based off a
 string.
 
 
------ Bug 2 solved! -----
+----- Bug 3 solved! -----
 * Finding the location of the bug was quick because of this line of code:
 ```
   if (!Character.isDigit(lastChar)) {
