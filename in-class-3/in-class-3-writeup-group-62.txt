@@ -116,6 +116,12 @@ Q) Bug1: what changes did you observe in the suspiciousness rankings/visualizati
 
 Q) Bug1: what information helped you to ultimately localize and fix the bug?
 
+To find and fix the bug, we first used the data gathered by Ant to see where tests failed. We looked at the line coverage covered-failed-tests ant data to see exactly which class, 
+then which lines, were covered. This means that these lines were exicuted when a test failed, thus, there is a bug in the method IsNumber(). 
+From here, we looked at the input that made IsNumber() not act as desired and stepped through the method. 
+Doing this, we were able to logic that the method does not test for is the input string has a decimal in it and will sometimes will return true when it should return false. 
+To fix this, all we had to do was test for a decimal and return false if it finds one. 
+
 Q) Bug2: does the suspiciousness ranking list the buggy line? Briefly explain why or why not?
 
 Q) Bug3: is this bug easier to localize because of the raised exception? Briefly explain why or why not?
