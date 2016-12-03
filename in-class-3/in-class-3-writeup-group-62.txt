@@ -1,115 +1,9 @@
 CS 520 IN CLASS EXERCISE 3
-12/1/16
+12/2/16
 GROUP MEMBERS: Stephen Palagi, Omar Ismail, Alyssa Seifert, Joshua Tranfaglia
 
 In Class Exercise 3 - Writeup
 
------ Debugging the 1st bug notes -----
-1.) From looking at just the test output for ant test, I was able to infer that the bug was happening in 
-the test case testThisWorkedAtSomePoint. The program seems to check if a piece of data is a number, but is
-being passed a string.
-2.) When looking at just the test case, it is clear where failing assertions are created, and specifically, 
-the fault is occuring at line 181 during this assertion:
-	assertFalse("isNumber(String) failed", NumberUtils.isNumber(val));
-
------ Bug 1 solved! -----
-I was able to locate and fix the first bug.
-It was located on line 1410 of NumberUtils.java, where the method checks for the letter L. The comments for the code indicate
-that L is only a valid character if the number has no exponents and no decimal points. When changing the check from:
-	
-	return foundDigit && !hasExp;
-
-	to:
-
-	if (!hasExp && !hasDecPoint) return foundDigit;
-
-
------ Debugging the 2nd bug notes -----
-1.) From looking at just the test output I was able to infer that the bug was happening in the test case 
-testJavaVersionAsInt() in the file SystemUtilsTest2.java.
-
------ Bug 2 solved! -----
-I was able to locate and fix the second bug.
-There were 2 separate causes of the bug. The first cause was the function toJavaVersionInt returning float not int.
-The second cause was in the toVersionInt function that the toJavaVersionInt method calls. The method is passed an array
-and performs a check to make sure it is not null. The bug lies within this check, as it does not account for arrays of 
-size 0. The original form:
-
-	if (javaVersions == NULL) return 0;
-
-	to:
-
-	if (javaVersions == NULL || javaVersions.length == 0) return 0;
-
-
-
------ Debugging the 3rd bug notes -----
-1) This bug is a little more tricky to figure out what the code was trying to
-do. Finding the fault was pretty easy. The test called
-`NumberUtils.createNumber` and quicly glancing the test cases, we observed that
-they were passing in 3 things: 
-  a) a sign (negative "-") or no sign
-  b) from the first character to the last character are numbers
-  c) the last character is an "l"
-
-  Investigating the `#createNumber` function inside "NumberUtils.java", we
-browsed to find the location in the code that evaluated the last character "l".
-This was the most logical step because it was the only unqiue part of creating a
-number based off a string"NumberUtils.java", we browsed to find the location in
-the code that evaluated the last character "l". This was the most logical step
-because it was the only unqiue part of creating a number based off a
-string.
-
-
------ Bug 3 solved! -----
-* Finding the location of the bug was quick because of this line of code:
-```
-  if (!Character.isDigit(lastChar)) {
-    ...
-```
-
-The test failed because an error was thrown due to the evaluation of an if
-block to be false. The if block in question was this:
-
-```
-  if (dec == null
-      && exp == null
-      && isDigits(numeric.substring(1))
-      && (numeric.charAt(0) == '-' || Character.isDigit(numeric.charAt(0)))) {
-```
-This proved to be a little tricky because of the confusion as to the intention
-of the code. Was the code supposed to ensure that only three characters would be
-in the string? Taking the test as the source of truth, it made more sense that
-the code just wanted to have two logical checks
-  a) to allow if the first character is a negative sign
-  b) to make sure that every character from the first to the last (excluding
-"l") was a digit (assuming you allow for (a)).
-
-The solution was to create a loop to make this function more extendible and
-allow any length of a string to be passed in as input. Here is the solution:
-
-```
-  // numeric here is the string but without the last character, as observed a
-  // few lines above with thia few lines above with thia few lines above with 
-  // this line of code
-  // String numeric = str.substring(0, str.length() - 1);
-
-  boolean isNumericAllDigits = true;
-
-  if (numeric.charAt(0) == '-')
-    numeric = numeric.substring(1);
-
-  for(int i = 0; i < numeric.length(); i++)
-    isNumericAllDigits = Character.isDigit(numeric.charAt(i));
-
-  if (dec == null
-      && exp == null
-      && isNumericAllDigits) {
-```
-
-
-
------ QUESTIONS TO ANSWER -----
 Q) Bug1: were you able to infer the buggy class and buggy method from the test output? Briefly explain why or why not. If not, could the test be improved to make this inference easier?
   A) We were able to infer the buggy method from the test output, but not necessarily the buggy class.
       This is becuase the test output lists the exact assertion that failed, with what method,
@@ -119,7 +13,7 @@ Q) Bug1: were you able to infer the buggy class and buggy method from the test o
       to make it easier to find which class has the bug after determining which method contains the bug.
 
 Q) Bug1: what changes did you observe in the suspiciousness rankings/visualizations after minimizing the failing test? What might have caused these changes?
-  A) We 
+  A)  
 
 Q) Bug1: what information helped you to ultimately localize and fix the bug?
   A) To find and fix the bug, we first used the data gathered by Ant to see where tests failed.
@@ -133,8 +27,9 @@ Q) Bug1: what information helped you to ultimately localize and fix the bug?
       To fix this, all we had to do was test for a decimal and return false if it finds one. 
 
 Q) Bug2: does the suspiciousness ranking list the buggy line? Briefly explain why or why not?
-  A) Yes, the suspiciousness ranking did list the buggy line. These lines were marked as suspicious because the function was
-  returning a float when it was expecting an int.
+  A) Yes, the suspiciousness ranking did list the buggy line.
+     These lines were marked as suspicious because the function was
+     returning a float when it was expecting an int.
 
 Q) Bug3: is this bug easier to localize because of the raised exception? Briefly explain why or why not?
   A) It does certainly help. While there are many "throw new" in the
@@ -142,9 +37,3 @@ Q) Bug3: is this bug easier to localize because of the raised exception? Briefly
       and then quickly scroll through the funciton to find "throw new". This made it
       easier to find the section of the function that was triggered the failed test
       case (this is helpful because the function is approx 150 lines of code).
-
-
------ DELIVERABLES -----
-[X] Your TestClass4.java that contains the minimized failing test case.
-[X] The fixed source code files for the bugs that you localized and fixed.
-[] A plain-text file with your answers to the questions above. Please list all group members on top of this file.
