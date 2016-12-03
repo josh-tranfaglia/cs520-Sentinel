@@ -111,28 +111,39 @@ allow any length of a string to be passed in as input. Here is the solution:
 
 ----- QUESTIONS TO ANSWER -----
 Q) Bug1: were you able to infer the buggy class and buggy method from the test output? Briefly explain why or why not. If not, could the test be improved to make this inference easier?
+  A) We were able to infer the buggy method from the test output, but not necessarily the buggy class.
+      This is becuase the test output lists the exact assertion that failed, with what method,
+      at which line number in the test class. Thus, it is very easy to find which assertion exactly has failed,
+      and follow the breadcrumbs back to the buggy method. It was not as as easy to infer the buggy class from the test output.
+      If possible, the test suite should be named after the class it is testing,
+      to make it easier to find which class has the bug after determining which method contains the bug.
 
 Q) Bug1: what changes did you observe in the suspiciousness rankings/visualizations after minimizing the failing test? What might have caused these changes?
+  A) We 
 
 Q) Bug1: what information helped you to ultimately localize and fix the bug?
+  A) To find and fix the bug, we first used the data gathered by Ant to see where tests failed.
+      We looked at the line coverage covered-failed-tests ant data to see exactly which class,
+      then which lines, were covered. This means that these lines were exicuted when a test failed,
+      thus, there is a bug in the method IsNumber(). 
 
-To find and fix the bug, we first used the data gathered by Ant to see where tests failed. We looked at the line coverage covered-failed-tests ant data to see exactly which class, 
-then which lines, were covered. This means that these lines were exicuted when a test failed, thus, there is a bug in the method IsNumber(). 
-From here, we looked at the input that made IsNumber() not act as desired and stepped through the method. 
-Doing this, we were able to logic that the method does not test for is the input string has a decimal in it and will sometimes will return true when it should return false. 
-To fix this, all we had to do was test for a decimal and return false if it finds one. 
+      From here, we looked at the input that made IsNumber() not act as desired and stepped through the method. 
+      Doing this, we were able to logic that the method does not test for is the input string has a decimal in it
+      and will sometimes will return true when it should return false. 
+      To fix this, all we had to do was test for a decimal and return false if it finds one. 
 
 Q) Bug2: does the suspiciousness ranking list the buggy line? Briefly explain why or why not?
+  A) 
 
 Q) Bug3: is this bug easier to localize because of the raised exception? Briefly explain why or why not?
   A) It does certainly help. While there are many "throw new" in the
-"NumberUtils.java", the first step was to look at the "#createNumber" function
-and then quickly scroll through the funciton to find "throw new". This made it
-easier to find the section of the function that was triggered the failed test
-case (this is helpful because the function is approx 150 lines of code).
+      "NumberUtils.java", the first step was to look at the "#createNumber" function
+      and then quickly scroll through the funciton to find "throw new". This made it
+      easier to find the section of the function that was triggered the failed test
+      case (this is helpful because the function is approx 150 lines of code).
 
 
 ----- DELIVERABLES -----
-[] Your TestClass4.java that contains the minimized failing test case.
-[] The fixed source code files for the bugs that you localized and fixed.
-[x] A plain-text file with your answers to the questions above. Please list all group members on top of this file.
+[X] Your TestClass4.java that contains the minimized failing test case.
+[X] The fixed source code files for the bugs that you localized and fixed.
+[] A plain-text file with your answers to the questions above. Please list all group members on top of this file.
