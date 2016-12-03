@@ -133,7 +133,8 @@ Q) Bug1: what information helped you to ultimately localize and fix the bug?
       To fix this, all we had to do was test for a decimal and return false if it finds one. 
 
 Q) Bug2: does the suspiciousness ranking list the buggy line? Briefly explain why or why not?
-  A) 
+  A) Yes, the suspiciousness ranking did list the buggy line. These lines were marked as suspicious because the function was
+  returning a float when it was expecting an int.
 
 Q) Bug3: is this bug easier to localize because of the raised exception? Briefly explain why or why not?
   A) It does certainly help. While there are many "throw new" in the
