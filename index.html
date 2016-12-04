@@ -5,6 +5,7 @@
 
 <html lang="en">
 	
+	<!-- HEAD -->
 	<head>
 		<title> CS 520 Sentinel</title>
 		<!-- libraries and stylesheets -->
@@ -16,7 +17,11 @@
   		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</head>
+	<!-- END HEAD -->
 
+
+
+	<!-- BODY -->
 	<body>
 		<!-- NAVBAR -->
 		<nav class="navbar navbar-default">
@@ -24,13 +29,13 @@
 				<div class="navbar-header">
 					<a class="navbar-brand" href="#">CS 520 Sentinel</a>
 				</div>
-				<ul class="nav navbar-nav">
+				<ul class="nav navbar-nav" id="filter-text">
 					<li class="active"><a href="#">Mutants</a></li>
 					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">All<span class="caret"></span></a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span id="filter-one"></span><span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="#">Live</a></li>
-							<li><a href="#">Killed</a></li>
+							<li><a href="#" onclick="shuffle(twoFilter)"><span id="filter-two"></span></a></li>
+							<li><a href="#" onclick="shuffle(threeFilter)"><span id="filter-three"></span></a></li>
 						</ul>
 					</li>
 				</ul>
@@ -76,6 +81,37 @@
 			</div>
 		</div>
 		<!-- END INTERFACE -->
+
+		<!-- JAVASCRIPT -->
+		<script>
+		filters = ["All", "Live", "Killed"];
+		currFilter = filters[0], twoFilter = filters[1], threeFilter = filters[2];
+
+		document.getElementById("filter-one").innerHTML= currFilter;
+		document.getElementById("filter-two").innerHTML = twoFilter;
+		document.getElementById("filter-three").innerHTML = threeFilter;
+ 
+		function shuffle(selected) {
+			currFilter = selected;
+			if (selected === filters[0]) {
+				twoFilter = filters[1];
+				threeFilter = filters[2];
+			} else if (selected == filters[1]) {
+				twoFilter = filters[0];
+				threeFilter = filters[2];
+			} else {
+				twoFilter = filters[0];
+				threeFilter = filters[1];
+			}
+			document.getElementById("filter-one").innerHTML= currFilter;
+			document.getElementById("filter-two").innerHTML = twoFilter;
+			document.getElementById("filter-three").innerHTML = threeFilter;
+			return;
+		}
+
+		</script>
+		<!-- END JAVSCRIPT -->
 	</body>
+	<!-- END BODY -->
 
 </html>	
