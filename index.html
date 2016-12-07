@@ -122,14 +122,22 @@
 			return;
 		}
 
+		// display the mutants
 		function display_mutants(results) {
+			// get the list from the form
 			var list = document.getElementById("display-list");
 			var list_filler = document.getElementById("filler");
+			// remove filler text
 			list.removeChild(list_filler);
 
+			// the list item we are going to add to the list
 			var li;
 
+			// iterate over the array
 			for (var i = 1; i < results.data.length-1; i++) {
+				// more sanity checks, could be handled better, wrote this up quickly
+				// if it's a mutant, create the item and append it.
+				// more stuff needs to be done here
 				if (results.data[i][1] == "LIVE") {
 					li = document.createElement("li");
 					li.setAttribute("class", "list-group-item");
@@ -144,8 +152,11 @@
 			}	
 		}
 
+		// fill in the stats panel
 		function getstats(results) {
+			// iterate over the mutants
 			for (var i = 0; i < results.data.length; i++) {
+				// sanity checks, there are a few stray entries that need to be filtered out
 				if (results.data[i][1] == "LIVE") {
 					total_live++;
 					total_mutants++;
@@ -154,13 +165,16 @@
 					total_mutants++;
 				}
 			}
+			// display the data
 			document.getElementById("tm").innerHTML= total_mutants;
 			document.getElementById("tk").innerHTML= total_killed;
 			document.getElementById("tl").innerHTML= total_live;
 
+			// display the list of mutants
 			display_mutants(results);
 		}
 
+		// called by the file input tag
 		function parsecsv() {
 
 			// reset stats if new file is chosen
@@ -172,12 +186,16 @@
 			var file = document.getElementById("csv-input");
 
 			if ('files' in file) {
+				// if there is no file, just print to console
 				if (file.files.length == 0) {
 					console.log("select a csv file");
 				} else {
+					// if there was a file selected, parse with PapaParse and display the results in the console
+					// you can view the structure of the results there
 					Papa.parse(file.files[0], {
 						complete: function(results) {
-							console.log("Finished:", results);	
+							console.log("Finished:", results);
+							// fill i the stats	
 							getstats(results);
 						} 
 					});
