@@ -60,7 +60,10 @@
 							</tbody>
 						</table>
 					</div>
-					<ul class="list-group mutant-bg">
+					<ul class="list-group mutant-bg" id="display-list">
+						<li class="list-group-item" id="filler">No file selected!</li>
+						
+						<!--
 						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#990000">KILLED</span></li>
 						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-down mutant-glyph"></span>Mutant 1 // <span style="color:#006600">LIVE</span>
 						<br><br>
@@ -76,6 +79,7 @@
 						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#990000">KILLED</span></li>
 						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#990000">KILLED</span></li>
 						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#006600">LIVE</span></li>
+						-->
 					</ul>
 				</div>
 			</div>
@@ -119,6 +123,17 @@
 			return;
 		}
 
+		function display_mutants(results) {
+			var list = document.getElementById("display-list");
+			var list_filler = document.getElementById("filler");
+			list.removeChild(list_filler);
+
+			var li;
+
+			for (var i = 0; i < results.data.length; i++) {
+			}	
+		}
+
 		function getstats(results) {
 			for (var i = 0; i < results.data.length; i++) {
 				if (results.data[i][1] == "LIVE") {
@@ -132,6 +147,8 @@
 			document.getElementById("tm").innerHTML= total_mutants;
 			document.getElementById("tk").innerHTML= total_killed;
 			document.getElementById("tl").innerHTML= total_live;
+
+			display_mutants(results);
 		}
 
 		function parsecsv() {
