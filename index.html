@@ -120,11 +120,18 @@
 		}
 
 		function getstats(results) {
-			console.log("made it here");
-			console.log(results);
-
-			total_mutants = results.data.length-2;
+			for (var i = 0; i < results.data.length; i++) {
+				if (results.data[i][1] == "LIVE") {
+					total_live++;
+					total_mutants++;
+				} else if (results.data[i][1] == "FAIL") {
+					total_killed++;
+					total_mutants++;
+				}
+			}
 			document.getElementById("tm").innerHTML= total_mutants;
+			document.getElementById("tk").innerHTML= total_killed;
+			document.getElementById("tl").innerHTML= total_live;
 		}
 
 		function parsecsv() {
