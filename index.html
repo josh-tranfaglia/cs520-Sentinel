@@ -53,10 +53,10 @@
 								<th>Summary</th>
 							</thead>
 							<tbody>
-								<tr><td>Mutants Generated: 5</td></tr>
-								<tr><td>Mutants Killed: 3</td></tr>
-								<tr><td>Mutants Living: 2</td></tr>
-								<tr><td>Run-time (seconds): 0.2</td></tr>
+								<tr><td>Mutants Generated: <span id="tm"></span></td></tr>
+								<tr><td>Mutants Killed: <span id="tk"></span></td></tr>
+								<tr><td>Mutants Living: <span id="tl"></span></td></tr>
+								<tr><td>Run-time (seconds): <span id="rt"></span></td></tr>
 							</tbody>
 						</table>
 					</div>
@@ -90,6 +90,16 @@
 		document.getElementById("filter-one").innerHTML= currFilter;
 		document.getElementById("filter-two").innerHTML = twoFilter;
 		document.getElementById("filter-three").innerHTML = threeFilter;
+
+		total_mutants = 0;
+		total_killed = 0;
+		total_live = 0;
+		run_time = 0;
+
+		document.getElementById("tm").innerHTML= total_mutants;
+		document.getElementById("tk").innerHTML= total_killed;
+		document.getElementById("tl").innerHTML= total_live;
+		document.getElementById("rt").innerHTML= run_time;
  
 		function shuffle(selected) {
 			currFilter = selected;
@@ -109,7 +119,22 @@
 			return;
 		}
 
+		function getstats(results) {
+			console.log("made it here");
+			console.log(results);
+
+			total_mutants = results.data.length-2;
+			document.getElementById("tm").innerHTML= total_mutants;
+		}
+
 		function parsecsv() {
+
+			// reset stats if new file is chosen
+			total_mutants = 0;
+			total_killed = 0;
+			total_live = 0;
+			run_time = 0;
+
 			var file = document.getElementById("csv-input");
 
 			if ('files' in file) {
@@ -118,7 +143,8 @@
 				} else {
 					Papa.parse(file.files[0], {
 						complete: function(results) {
-							console.log("Finished:", results.data);	
+							console.log("Finished:", results);	
+							getstats(results);
 						} 
 					});
 				}
