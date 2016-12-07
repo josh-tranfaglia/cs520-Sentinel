@@ -16,10 +16,9 @@
   		<link rel="stylesheet" type="text/css" href="sentinel.css">
   		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	  	<script src="PapaParse-4.1.2/papaparse.min.js"></script>
 	</head>
 	<!-- END HEAD -->
-
-
 
 	<!-- BODY -->
 	<body>
@@ -50,6 +49,7 @@
 					<div class="well well-sm">
 						<table class="table table-condensed borderless">
 							<thead>
+								<input type="file" id="csv-input" onchange="parsecsv()"></input><br>
 								<th>Summary</th>
 							</thead>
 							<tbody>
@@ -109,15 +109,31 @@
 			return;
 		}
 
+		function parsecsv() {
+			var file = document.getElementById("csv-input");
+
+			if ('files' in file) {
+				if (file.files.length == 0) {
+					console.log("select a csv file");
+				} else {
+					Papa.parse(file.files[0], {
+						complete: function(results) {
+							console.log("Finished:", results.data);	
+						} 
+					});
+				}
+			}
+		}
+
 		// creates 2D array of mutant data from CSV file
-		function processData(allText) {
+		/*function processData(allText) {
 			var allTextLines = allText.split(/\r\n|\n/);
 			var headers = allTextLines[0].split(',',3);
 			var lines = [];
 
 			for (var i=1; i<allTextLines.length; i++) {
 				//split at first 2 commas then first 2 "@@"
-			    var data = allTextLines[i].split(','3).split("@@",3); 
+			    var data = allTextLines[i].split(',',3).split("@@",3); 
 			    if (data.length == headers.length+2) { //==5
 			        lines.push(data);
 			    }
@@ -133,7 +149,7 @@
 		        // Create the list item:
 		      //  var mutantLiElem = document.createElement('li');
 		        	var mutant = document.createElement('ul');
-		        	for(int j = 1 ; j<lines.length ; j++){
+		        	for(var j = 1 ; j<lines.length ; j++){
 		        		var mutantLine = lines[j]
 		        		var mutantAttribute = document.createElement("li");
 		        		mutantAttribute.appendChild(document.createTextNode(mutantLine[j]));
@@ -145,7 +161,7 @@
     		}
     		// Finally, return the constructed list:
     		return mutantList;
-			}
+		}*/
 
 		</script>
 		<!-- END JAVSCRIPT -->
