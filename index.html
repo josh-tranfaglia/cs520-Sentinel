@@ -62,17 +62,6 @@
 					</div>
 					<ul class="list-group mutant-bg" id="display-list">
 						<li class="list-group-item" id="filler">No file selected!</li>
-						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-down mutant-glyph"></span>Mutant 1 // <span style="color:#006600">LIVE</span>
-						<br><br>
-								<p>
-									Source: C:/usr/tmp/bin/module.java<br>
-									Line(s) Changed: 18<br><br>
-									SOURCE:<br>
-									<code style="color:black">if (a <= <span style="color:red">0</span> || b <= 0 || c <= 0) {</code><br><br>
-									MUTANT:<br>
-									<code style="color:black">if (a <= <span style="color:red">1</span> || b <= 0 || c <= 0) {</code>
-								</p>
-						</li>
 						<!--
 						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#990000">KILLED</span></li>
 						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-down mutant-glyph"></span>Mutant 1 // <span style="color:#006600">LIVE</span>
@@ -140,12 +129,18 @@
 
 			var li;
 
-			for (var i = 1; i < results.data.length; i++) {
-				li = document.createElement("li");
-				li.setAttribute("class", "list-group-item");
-				li.appendChild(document.createTextNode("Mutant "));
-				li.appendChild(document.createTextNode(results.data[i][0]));
-				list.appendChild(li);
+			for (var i = 1; i < results.data.length-1; i++) {
+				if (results.data[i][1] == "LIVE") {
+					li = document.createElement("li");
+					li.setAttribute("class", "list-group-item");
+					li.appendChild(document.createTextNode("Mutant " + results.data[i][0] + " // test live"));
+					list.appendChild(li);
+				} else if (results.data[i][1] == "FAIL") {
+					li = document.createElement("li");
+					li.setAttribute("class", "list-group-item");
+					li.appendChild(document.createTextNode("Mutant " + results.data[i][0] + " // test killed"));
+					list.appendChild(li);
+				}
 			}	
 		}
 
