@@ -109,6 +109,44 @@
 			return;
 		}
 
+		// creates 2D array of mutant data from CSV file
+		function processData(allText) {
+			var allTextLines = allText.split(/\r\n|\n/);
+			var headers = allTextLines[0].split(',',3);
+			var lines = [];
+
+			for (var i=1; i<allTextLines.length; i++) {
+				//split at first 2 commas then first 2 "@@"
+			    var data = allTextLines[i].split(','3).split("@@",3); 
+			    if (data.length == headers.length+2) { //==5
+			        lines.push(data);
+			    }
+			}
+			return lines;
+		}
+
+		//takes 2D array and makes it into an html unordered list of mutant string data
+		function populateMutantList(lines){
+			var mutantsList = document.createElement('ul');
+				mutantsList.class = "list-group mutant-bg"
+		    for(var i = 0; i < lines.length; i++) {
+		        // Create the list item:
+		      //  var mutantLiElem = document.createElement('li');
+		        	var mutant = document.createElement('ul');
+		        	for(int j = 1 ; j<lines.length ; j++){
+		        		var mutantLine = lines[j]
+		        		var mutantAttribute = document.createElement("li");
+		        		mutantAttribute.appendChild(document.createTextNode(mutantLine[j]));
+		        		mutantAttribute.class = "list-group-item"
+		        		mutant.appendChild(mutantAttribute);
+		        	}
+		        // Add it to the list:
+		        mutantsList.appendChild(mutant);
+    		}
+    		// Finally, return the constructed list:
+    		return mutantList;
+			}
+
 		</script>
 		<!-- END JAVSCRIPT -->
 	</body>
