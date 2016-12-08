@@ -9,6 +9,7 @@ Git itself has these hooks where you can set a script to run automatically after
 If they write a script that runs "ant test" and verifies that all the tests pass, then the commit will successfully work, and the commit will fail if the script returns false, signaling that the tests failed.
 
 3. How many commits exist between version v1.0.0 and the HEAD revision?
+12 commits exist between HEAD and v1.0.0, excluding both HEAD and v1.0.0.
 
 4. Which commit introduced the defect?
 b8010069dc322727ebc6af2024cf3d92a3c7cbfa introduced the defect. 
