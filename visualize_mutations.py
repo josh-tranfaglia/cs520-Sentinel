@@ -68,13 +68,20 @@ for mutant_id, status in mutant_id_status.items():
 
 aggregated_mutant_output_file = open("aggregated_mutant_output.csv",'w')
 csv_writer = csv.writer(aggregated_mutant_output_file, delimiter=',')
+# Change the mutant_output_headers to include the 6 secitons of the output.split("\n")
+        # join the output into ONE string via a pipe or some other unique character
 mutant_output_headers = ["MutantID", "Status", "Output"]
 csv_writer.writerow(mutant_output_headers)
 
+mutant_id_and_output.pop('MutantNo', None)
+
+counter = []
 for mutant_id, result in mutant_id_and_output.items():
     status = result["status"]
     output = result["output"]
-    csv_writer.writerow([mutant_id, status, output])
+    output_list = output.split("\n")
+    output_string = "|".join(output_list)
+    csv_writer.writerow([mutant_id, status, output_string])
     print("For Mutant ID: " + mutant_id + ", Status: " + status + ", Output: ")
     print("")
     for string in output.split("\n"):
@@ -82,5 +89,6 @@ for mutant_id, result in mutant_id_and_output.items():
     print("")
 
 
-# ./mutation_results/killed.csv
-# ./show_mutant.sh
+# pdb.set_trace()
+# "./mutation_results/killed.csv"
+# "./show_mutant.sh"
