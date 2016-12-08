@@ -1,0 +1,22 @@
+Omar Ismail, Stephen Palagi, Alyssa Seifert, Josh Tranfaglia
+
+1. Why does the described automated testing infrastructure not catch the defect?
+The automated testing infrastructure, as described in the background, the developers went haywire and did not run their tests after every commit. 
+This is why the infrastructure did not catch it. If they had run their test after every commit, then they would have caught the defect.
+
+2. How could the developers improve the build file or the testing infrastructure to notice test failures in the future?
+Git itself has these hooks where you can set a script to run automatically after every commit. 
+If they write a script that runs "ant test" and verifies that all the tests pass, then the commit will successfully work, and the commit will fail if the script returns false, signaling that the tests failed.
+
+3. How many commits exist between version v1.0.0 and the HEAD revision?
+
+4. Which commit introduced the defect?
+b8010069dc322727ebc6af2024cf3d92a3c7cbfa introduced the defect. 
+
+5. After how many steps did you identify the defect-inducing commit?
+It took 4 steps to find the defect. 
+
+6. (Optional) Can you give a command (<cmd>) such that the following calls of git bisect automatically determine the defective commit:
+git bisect start HEAD v1.0.0
+git bisect run <cmd>
+
