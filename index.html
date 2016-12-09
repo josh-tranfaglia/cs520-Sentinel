@@ -133,13 +133,14 @@
 			return;
 		}
 
+		// TODO: really need to abstract this
 		// display the mutants
 		function createlists(results, filter) {
 			// get the list from the form
 			var list = document.getElementById("display-list");
 
 			// the list item we are going to add to the list
-			var li, status_span;
+			var li, status_span, mutant_text;
 
 			if (filter == undefined) {
 				while(list.firstChild) {
@@ -157,6 +158,11 @@
 						status_span.setAttribute("class", "living-text");
 						status_span.innerHTML = "LIVE";
 						li.appendChild(status_span);
+						li.appendChild(document.createElement("br"));
+						li.appendChild(document.createElement("br"));
+						mutant_text = document.createElement("p");
+						mutant_text.innerHTML = results.data[i][2];
+						li.appendChild(mutant_text);
 						list.appendChild(li);
 					} else if (results.data[i][1] == "FAIL") {
 						li = document.createElement("li");
@@ -166,6 +172,11 @@
 						status_span.setAttribute("class", "killed-text");
 						status_span.innerHTML = "KILLED";
 						li.appendChild(status_span);
+						li.appendChild(document.createElement("br"));
+						li.appendChild(document.createElement("br"));
+						mutant_text = document.createElement("p");
+						mutant_text.innerHTML = results.data[i][2];
+						li.appendChild(mutant_text);
 						list.appendChild(li);
 					}
 				}
@@ -182,6 +193,11 @@
 						status_span.setAttribute("class", "living-text");
 						status_span.innerHTML = "LIVE";
 						li.appendChild(status_span);
+						li.appendChild(document.createElement("br"));
+						li.appendChild(document.createElement("br"));
+						mutant_text = document.createElement("p");
+						mutant_text.innerHTML = results.data[i][2];
+						li.appendChild(mutant_text);
 						list.appendChild(li);
 					}
 				}
@@ -198,6 +214,11 @@
 						status_span.setAttribute("class", "killed-text");
 						status_span.innerHTML = "KILLED";
 						li.appendChild(status_span);
+						li.appendChild(document.createElement("br"));
+						li.appendChild(document.createElement("br"));
+						mutant_text = document.createElement("p");
+						mutant_text.innerHTML = results.data[i][2];
+						li.appendChild(mutant_text);
 						list.appendChild(li);
 					}
 				}
