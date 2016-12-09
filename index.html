@@ -139,7 +139,7 @@
 			var list = document.getElementById("display-list");
 
 			// the list item we are going to add to the list
-			var li, remove_node;
+			var li, status_span;
 
 			if (filter == undefined) {
 				while(list.firstChild) {
@@ -152,12 +152,20 @@
 					if (results.data[i][1] == "LIVE") {
 						li = document.createElement("li");
 						li.setAttribute("class", "list-group-item");
-						li.appendChild(document.createTextNode("Mutant " + results.data[i][0] + " // test live"));
+						li.appendChild(document.createTextNode("Mutant " + results.data[i][0] + " // "));
+						status_span = document.createElement("span");
+						status_span.setAttribute("class", "living-text");
+						status_span.innerHTML = "LIVE";
+						li.appendChild(status_span);
 						list.appendChild(li);
 					} else if (results.data[i][1] == "FAIL") {
 						li = document.createElement("li");
 						li.setAttribute("class", "list-group-item");
-						li.appendChild(document.createTextNode("Mutant " + results.data[i][0] + " // test killed"));
+						li.appendChild(document.createTextNode("Mutant " + results.data[i][0] + " // "));
+						status_span = document.createElement("span");
+						status_span.setAttribute("class", "killed-text");
+						status_span.innerHTML = "KILLED";
+						li.appendChild(status_span);
 						list.appendChild(li);
 					}
 				}
@@ -169,7 +177,11 @@
 					if (results.data[j][1] == "LIVE") {
 						li = document.createElement("li");
 						li.setAttribute("class", "list-group-item");
-						li.appendChild(document.createTextNode("Mutant " + results.data[j][0] + " // test live"));
+						li.appendChild(document.createTextNode("Mutant " + results.data[j][0] + " // "));
+						status_span = document.createElement("span");
+						status_span.setAttribute("class", "living-text");
+						status_span.innerHTML = "LIVE";
+						li.appendChild(status_span);
 						list.appendChild(li);
 					}
 				}
@@ -181,7 +193,11 @@
 					if (results.data[k][1] == "FAIL") {
 						li = document.createElement("li");
 						li.setAttribute("class", "list-group-item");
-						li.appendChild(document.createTextNode("Mutant " + results.data[k][0] + " // test killed"));
+						li.appendChild(document.createTextNode("Mutant " + results.data[k][0] + " // "));
+						status_span = document.createElement("span");
+						status_span.setAttribute("class", "killed-text");
+						status_span.innerHTML = "KILLED";
+						li.appendChild(status_span);
 						list.appendChild(li);
 					}
 				}

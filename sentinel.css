@@ -11,4 +11,11 @@
 	padding-right: 5px;
 }
 
+.killed-text {
+	color: #990000;
+}
+
+.living-text {
+	color: #006600;
+}
 /* ID's */
