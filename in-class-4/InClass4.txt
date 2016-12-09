@@ -16,7 +16,7 @@ Omar Ismail, Stephen Palagi, Alyssa Seifert, Josh Tranfaglia
     infrastructure to notice test failures in the future?
         The developers could simply edit their build file by
         setting the "haltonfailure" flag to true in their junit
-        execution options. THis would cause the build process to
+        execution options. This would cause the build process to
         quit abnormally if a test fails, thus triggering the
         reportBug program to send the email in the event that
         there is an issue with compilation or a test fails, as it
@@ -32,7 +32,11 @@ Omar Ismail, Stephen Palagi, Alyssa Seifert, Josh Tranfaglia
 
 5). After how many steps did you identify the defect-inducing
     commit?
-        It took 5 steps to find the defect, starting from the more superfluous, small code changes in Controller.java, ModeView.java, Model.java, and ResetCtrl.java before finding the defect in BasicStats.java, the first change in that document.
+        It took 5 steps to find the defect, starting from the more
+        superfluous, small code changes in Controller.java,
+        ModeView.java, Model.java, and ResetCtrl.java before
+        finding the defect in BasicStats.java, the first change in
+        that document.
 
 6). (Optional) Can you give a command (<cmd>) such that the
     following calls of git bisect automatically determine the
