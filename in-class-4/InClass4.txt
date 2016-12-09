@@ -3,20 +3,24 @@ Omar Ismail, Stephen Palagi, Alyssa Seifert, Josh Tranfaglia
 1). Why does the described automated testing infrastructure not
     catch the defect?
         The automated testing infrastructure, as described in the
-        background, the developers went haywire and did not run
-        their tests after every commit.
-        This is why the infrastructure did not catch it. If they
-        had run their test after every commit, then they would
-        have caught the defect.
+        background, only sends an email to the developers if the
+        command "ant clean test" returns with an exit code besides
+        0. However, a test failing does not result in an error.
+        Thus, their reportBug program would only email them if
+        there was a problem keeping the repository from compiling,
+        not if a test has failed. The bug introduced does not stop
+        the program from compiling, just resulting in failed
+        tests, which are not picked up by reportBug
 
 2). How could the developers improve the build file or the testing
     infrastructure to notice test failures in the future?
-        Git itself has these hooks where you can set a script to
-        run automatically after every commit. 
-        If they write a script that runs "ant test" and verifies
-        that all the tests pass, then the commit will successfully
-        work, and the commit will fail if the script returns
-        false, signaling that the tests failed.
+        The developers could simply edit their build file by
+        setting the "haltonfailure" flag to true in their junit
+        execution options. THis would cause the build process to
+        quit abnormally if a test fails, thus triggering the
+        reportBug program to send the email in the event that
+        there is an issue with compilation or a test fails, as it
+        should have originally.
 
 3). How many commits exist between version v1.0.0 and the HEAD
     revision?
@@ -28,11 +32,10 @@ Omar Ismail, Stephen Palagi, Alyssa Seifert, Josh Tranfaglia
 
 5). After how many steps did you identify the defect-inducing
     commit?
-        It took 4 steps to find the defect. 
+        It took 5 steps to find the defect, starting from the more superfluous, small code changes in Controller.java, ModeView.java, Model.java, and ResetCtrl.java before finding the defect in BasicStats.java, the first change in that document.
 
 6). (Optional) Can you give a command (<cmd>) such that the
     following calls of git bisect automatically determine the
     defective commit:
         git bisect start HEAD v1.0.0
         git bisect run <cmd>
-
