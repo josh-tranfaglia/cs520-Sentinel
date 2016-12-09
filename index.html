@@ -61,8 +61,9 @@
 						</table>
 					</div>
 					<ul class="list-group mutant-bg" id="display-list">
-						<li class="list-group-item" id="filler">No file selected!</li>
+						
 						<!--
+						<li class="list-group-item" id="filler">No file selected!</li>
 						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#990000">KILLED</span></li>
 						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-down mutant-glyph"></span>Mutant 1 // <span style="color:#006600">LIVE</span>
 						<br><br>
@@ -87,18 +88,25 @@
 
 		<!-- JAVASCRIPT -->
 		<script>
+		// various variables
 		filters = ["All", "Live", "Killed"];
 		currFilter = filters[0], twoFilter = filters[1], threeFilter = filters[2];
 
-		document.getElementById("filter-one").innerHTML= currFilter;
-		document.getElementById("filter-two").innerHTML = twoFilter;
-		document.getElementById("filter-three").innerHTML = threeFilter;
+		list_filler = '<li class="list-group-item" id="filler">No file selected!</li>';
+		display_list = list_filler;
 
 		total_mutants = 0;
 		total_killed = 0;
 		total_live = 0;
 		run_time = 0;
 
+		parsed_data = undefined;
+;
+		// display em
+		document.getElementById("filter-one").innerHTML= currFilter;
+		document.getElementById("filter-two").innerHTML = twoFilter;
+		document.getElementById("filter-three").innerHTML = threeFilter;
+		document.getElementById("display-list").innerHTML = display_list;
 		document.getElementById("tm").innerHTML= total_mutants;
 		document.getElementById("tk").innerHTML= total_killed;
 		document.getElementById("tl").innerHTML= total_live;
@@ -109,12 +117,15 @@
 			if (selected === filters[0]) {
 				twoFilter = filters[1];
 				threeFilter = filters[2];
+				createlists(parsed_data);
 			} else if (selected == filters[1]) {
 				twoFilter = filters[0];
 				threeFilter = filters[2];
+				createlists(parsed_data, selected);
 			} else {
 				twoFilter = filters[0];
 				threeFilter = filters[1];
+				createlists(parsed_data, selected);
 			}
 			document.getElementById("filter-one").innerHTML= currFilter;
 			document.getElementById("filter-two").innerHTML = twoFilter;
@@ -123,33 +134,59 @@
 		}
 
 		// display the mutants
-		function display_mutants(results) {
+		function createlists(results, filter) {
 			// get the list from the form
 			var list = document.getElementById("display-list");
-			var list_filler = document.getElementById("filler");
-			// remove filler text
-			list.removeChild(list_filler);
 
 			// the list item we are going to add to the list
-			var li;
+			var li, remove_node;
 
-			// iterate over the array
-			for (var i = 1; i < results.data.length-1; i++) {
-				// more sanity checks, could be handled better, wrote this up quickly
-				// if it's a mutant, create the item and append it.
-				// more stuff needs to be done here
-				if (results.data[i][1] == "LIVE") {
-					li = document.createElement("li");
-					li.setAttribute("class", "list-group-item");
-					li.appendChild(document.createTextNode("Mutant " + results.data[i][0] + " // test live"));
-					list.appendChild(li);
-				} else if (results.data[i][1] == "FAIL") {
-					li = document.createElement("li");
-					li.setAttribute("class", "list-group-item");
-					li.appendChild(document.createTextNode("Mutant " + results.data[i][0] + " // test killed"));
-					list.appendChild(li);
+			if (filter == undefined) {
+				while(list.firstChild) {
+					list.removeChild(list.firstChild);
 				}
-			}	
+				for (var i = 0; i < results.data.length; i++) {
+					// more sanity checks, could be handled better, wrote this up quickly
+					// if it's a mutant, create the item and append it.
+					// more stuff needs to be done here
+					if (results.data[i][1] == "LIVE") {
+						li = document.createElement("li");
+						li.setAttribute("class", "list-group-item");
+						li.appendChild(document.createTextNode("Mutant " + results.data[i][0] + " // test live"));
+						list.appendChild(li);
+					} else if (results.data[i][1] == "FAIL") {
+						li = document.createElement("li");
+						li.setAttribute("class", "list-group-item");
+						li.appendChild(document.createTextNode("Mutant " + results.data[i][0] + " // test killed"));
+						list.appendChild(li);
+					}
+				}
+			} else if (filter == filters[1]) {
+				while(list.firstChild) {
+					list.removeChild(list.firstChild);
+				}
+				for (var j = 0; j < results.data.length; j++) {
+					if (results.data[j][1] == "LIVE") {
+						li = document.createElement("li");
+						li.setAttribute("class", "list-group-item");
+						li.appendChild(document.createTextNode("Mutant " + results.data[j][0] + " // test live"));
+						list.appendChild(li);
+					}
+				}
+			} else if (filter == filters[2]) {
+				while(list.firstChild) {
+					list.removeChild(list.firstChild);
+				}
+				for (var k = 0; k < results.data.length; k++) {
+					if (results.data[k][1] == "FAIL") {
+						li = document.createElement("li");
+						li.setAttribute("class", "list-group-item");
+						li.appendChild(document.createTextNode("Mutant " + results.data[k][0] + " // test killed"));
+						list.appendChild(li);
+					}
+				}
+			}
+
 		}
 
 		// fill in the stats panel
@@ -171,7 +208,7 @@
 			document.getElementById("tl").innerHTML= total_live;
 
 			// display the list of mutants
-			display_mutants(results);
+			createlists(results);
 		}
 
 		// called by the file input tag
@@ -195,8 +232,9 @@
 					Papa.parse(file.files[0], {
 						complete: function(results) {
 							console.log("Finished:", results);
-							// fill i the stats	
-							getstats(results);
+							// fill i the stats
+							parsed_data = results;	
+							getstats(parsed_data);
 						} 
 					});
 				}
@@ -204,7 +242,7 @@
 		}
 
 		// creates 2D array of mutant data from CSV file
-		/*function processData(allText) {
+		function processData(allText) {
 			var allTextLines = allText.split(/\r\n|\n/);
 			var headers = allTextLines[0].split(',',3);
 			var lines = [];
@@ -239,7 +277,7 @@
     		}
     		// Finally, return the constructed list:
     		return mutantList;
-		}*/
+		}
 
 		</script>
 		<!-- END JAVSCRIPT -->
