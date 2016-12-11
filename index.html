@@ -49,7 +49,7 @@
 					<div class="well well-sm">
 						<table class="table table-condensed borderless">
 							<thead>
-								<input type="file" id="csv-input" onchange="parsecsv()"></input><br>
+								<input type="file" id="csv-input" onchange="parse_csv()"></input><br>
 								<th>Summary</th>
 							</thead>
 							<tbody>
@@ -98,15 +98,15 @@
 			if (selected === filters[0]) {
 				twoFilter = filters[1];
 				threeFilter = filters[2];
-				createlists(parsed_data);
+				create_lists(parsed_data);
 			} else if (selected == filters[1]) {
 				twoFilter = filters[0];
 				threeFilter = filters[2];
-				createlists(parsed_data, selected);
+				create_lists(parsed_data, selected);
 			} else {
 				twoFilter = filters[0];
 				threeFilter = filters[1];
-				createlists(parsed_data, selected);
+				create_lists(parsed_data, selected);
 			}
 			document.getElementById("filter-one").innerHTML= currFilter;
 			document.getElementById("filter-two").innerHTML = twoFilter;
@@ -114,7 +114,38 @@
 			return;
 		}
 
-		function createlistitem(item) {
+		// formats the mutants text for the list item
+		function format_mutant_text(text) {
+			var split_text = text.split("|");
+			console.log(split_text);
+
+			var outer_p = document.createElement("p");
+
+			var p1 = document.createElement("p");
+			p1.innerHTML = split_text[0];
+			outer_p.appendChild(p1);
+
+			var p2 = document.createElement("p");
+			p2.innerHTML = split_text[1] + "" + split_text[2];
+			outer_p.appendChild(p2);
+
+			var p3 = document.createElement("p");
+			var p3_code = document.createElement("code");
+			p3_code.innerHTML = split_text[3];
+			p3.appendChild(p3_code);
+			outer_p.appendChild(p3);
+
+			var p4 = document.createElement("p");
+			var p4_code = document.createElement("code");
+			p4_code.innerHTML = split_text[4];
+			p4.appendChild(p4_code);
+			outer_p.appendChild(p4);
+
+			return outer_p;
+		}
+
+		// creates a list item given a mutant
+		function create_list_item(item) {
 			var li = document.createElement("li");
 			li.setAttribute("class", "list-group-item");
 			li.appendChild(document.createTextNode("Mutant " + item[0] + " // "));
@@ -128,16 +159,14 @@
 			}
 			li.appendChild(status_span);
 			li.appendChild(document.createElement("br"));
-			li.appendChild(document.createElement("br"));
-			var mutant_text = document.createElement("p");
-			mutant_text.innerHTML = item[2];
+			var mutant_text = format_mutant_text(item[2]);
 			li.appendChild(mutant_text);
 			return li;
 		}
 
 		// TODO: really need to abstract this
 		// display the mutants
-		function createlists(results, filter) {
+		function create_lists(results, filter) {
 			// get the list from the form
 			var list = document.getElementById("display-list");
 
@@ -151,10 +180,10 @@
 				for (var i = 0; i < results.data.length; i++) {
 					// if it's a mutant, create the item and append it.
 					if (results.data[i][1] == "LIVE") {
-						li = createlistitem(results.data[i]);
+						li = create_list_item(results.data[i]);
 						list.appendChild(li);
 					} else if (results.data[i][1] == "FAIL") {
-						li = createlistitem(results.data[i]);
+						li = create_list_item(results.data[i]);
 						list.appendChild(li);
 					}
 				}
@@ -164,7 +193,7 @@
 				}
 				for (var j = 0; j < results.data.length; j++) {
 					if (results.data[j][1] == "LIVE") {
-						li = createlistitem(results.data[j]);
+						li = create_list_item(results.data[j]);
 						list.appendChild(li);
 					}
 				}
@@ -174,7 +203,7 @@
 				}
 				for (var k = 0; k < results.data.length; k++) {
 					if (results.data[k][1] == "FAIL") {
-						li = createlistitem(results.data[k]);
+						li = create_list_item(results.data[k]);
 						list.appendChild(li);
 					}
 				}
@@ -183,7 +212,7 @@
 		}
 
 		// fill in the stats panel
-		function getstats(results) {
+		function get_stats(results) {
 			// iterate over the mutants
 			for (var i = 0; i < results.data.length; i++) {
 				// sanity checks, there are a few stray entries that need to be filtered out
@@ -201,11 +230,11 @@
 			document.getElementById("tl").innerHTML= total_live;
 
 			// display the list of mutants
-			createlists(results);
+			create_lists(results);
 		}
 
 		// called by the file input tag
-		function parsecsv() {
+		function parse_csv() {
 
 			// reset stats if new file is chosen
 			total_mutants = 0;
@@ -227,7 +256,7 @@
 							console.log("Finished:", results);
 							// fill i the stats
 							parsed_data = results;	
-							getstats(parsed_data);
+							get_stats(parsed_data);
 						} 
 					});
 				}
