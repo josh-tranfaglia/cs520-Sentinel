@@ -117,7 +117,7 @@
 		// formats the mutants text for the list item
 		function format_mutant_text(text) {
 			var split_text = text.split("|");
-			console.log(split_text);
+			console.log(split_text.length);
 
 			var outer_p = document.createElement("p");
 
@@ -130,6 +130,18 @@
 			outer_p.appendChild(p2);
 
 			var p3 = document.createElement("p");
+			var code;
+
+			for (var i = 3; i < split_text.length; i++) {
+				code = document.createElement("code");
+				code.innerHTML = split_text[i];
+				p3.appendChild(code);
+				p3.appendChild(document.createElement("br"));
+			}
+
+			outer_p.appendChild(p3);
+
+			/*var p3 = document.createElement("p");
 			var p3_code = document.createElement("code");
 			p3_code.innerHTML = split_text[3];
 			p3.appendChild(p3_code);
@@ -139,7 +151,7 @@
 			var p4_code = document.createElement("code");
 			p4_code.innerHTML = split_text[4];
 			p4.appendChild(p4_code);
-			outer_p.appendChild(p4);
+			outer_p.appendChild(p4);*/
 
 			return outer_p;
 		}
