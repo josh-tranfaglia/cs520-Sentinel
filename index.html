@@ -61,25 +61,6 @@
 						</table>
 					</div>
 					<ul class="list-group mutant-bg" id="display-list">
-						
-						<!--
-						<li class="list-group-item" id="filler">No file selected!</li>
-						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#990000">KILLED</span></li>
-						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-down mutant-glyph"></span>Mutant 1 // <span style="color:#006600">LIVE</span>
-						<br><br>
-								<p>
-									Source: C:/usr/tmp/bin/module.java<br>
-									Line(s) Changed: 18<br><br>
-									SOURCE:<br>
-									<code style="color:black">if (a <= <span style="color:red">0</span> || b <= 0 || c <= 0) {</code><br><br>
-									MUTANT:<br>
-									<code style="color:black">if (a <= <span style="color:red">1</span> || b <= 0 || c <= 0) {</code>
-								</p>
-						</li>
-						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#990000">KILLED</span></li>
-						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#990000">KILLED</span></li>
-						<li class="list-group-item"><span class="glyphicon glyphicon-chevron-right mutant-glyph"></span>Mutant 2 // <span style="color:#006600">LIVE</span></li>
-						-->
 					</ul>
 				</div>
 			</div>
@@ -133,6 +114,27 @@
 			return;
 		}
 
+		function createlistitem(item) {
+			var li = document.createElement("li");
+			li.setAttribute("class", "list-group-item");
+			li.appendChild(document.createTextNode("Mutant " + item[0] + " // "));
+			var status_span = document.createElement("span");
+			if (item[1] == "LIVE") {
+				status_span.setAttribute("class", "living-text");
+				status_span.innerHTML = "LIVE";
+			} else if (item[1] == "FAIL") {
+				status_span.setAttribute("class", "killed-text");
+				status_span.innerHTML = "KILLED";
+			}
+			li.appendChild(status_span);
+			li.appendChild(document.createElement("br"));
+			li.appendChild(document.createElement("br"));
+			var mutant_text = document.createElement("p");
+			mutant_text.innerHTML = item[2];
+			li.appendChild(mutant_text);
+			return li;
+		}
+
 		// TODO: really need to abstract this
 		// display the mutants
 		function createlists(results, filter) {
@@ -147,36 +149,12 @@
 					list.removeChild(list.firstChild);
 				}
 				for (var i = 0; i < results.data.length; i++) {
-					// more sanity checks, could be handled better, wrote this up quickly
 					// if it's a mutant, create the item and append it.
-					// more stuff needs to be done here
 					if (results.data[i][1] == "LIVE") {
-						li = document.createElement("li");
-						li.setAttribute("class", "list-group-item");
-						li.appendChild(document.createTextNode("Mutant " + results.data[i][0] + " // "));
-						status_span = document.createElement("span");
-						status_span.setAttribute("class", "living-text");
-						status_span.innerHTML = "LIVE";
-						li.appendChild(status_span);
-						li.appendChild(document.createElement("br"));
-						li.appendChild(document.createElement("br"));
-						mutant_text = document.createElement("p");
-						mutant_text.innerHTML = results.data[i][2];
-						li.appendChild(mutant_text);
+						li = createlistitem(results.data[i]);
 						list.appendChild(li);
 					} else if (results.data[i][1] == "FAIL") {
-						li = document.createElement("li");
-						li.setAttribute("class", "list-group-item");
-						li.appendChild(document.createTextNode("Mutant " + results.data[i][0] + " // "));
-						status_span = document.createElement("span");
-						status_span.setAttribute("class", "killed-text");
-						status_span.innerHTML = "KILLED";
-						li.appendChild(status_span);
-						li.appendChild(document.createElement("br"));
-						li.appendChild(document.createElement("br"));
-						mutant_text = document.createElement("p");
-						mutant_text.innerHTML = results.data[i][2];
-						li.appendChild(mutant_text);
+						li = createlistitem(results.data[i]);
 						list.appendChild(li);
 					}
 				}
@@ -186,18 +164,7 @@
 				}
 				for (var j = 0; j < results.data.length; j++) {
 					if (results.data[j][1] == "LIVE") {
-						li = document.createElement("li");
-						li.setAttribute("class", "list-group-item");
-						li.appendChild(document.createTextNode("Mutant " + results.data[j][0] + " // "));
-						status_span = document.createElement("span");
-						status_span.setAttribute("class", "living-text");
-						status_span.innerHTML = "LIVE";
-						li.appendChild(status_span);
-						li.appendChild(document.createElement("br"));
-						li.appendChild(document.createElement("br"));
-						mutant_text = document.createElement("p");
-						mutant_text.innerHTML = results.data[i][2];
-						li.appendChild(mutant_text);
+						li = createlistitem(results.data[j]);
 						list.appendChild(li);
 					}
 				}
@@ -207,18 +174,7 @@
 				}
 				for (var k = 0; k < results.data.length; k++) {
 					if (results.data[k][1] == "FAIL") {
-						li = document.createElement("li");
-						li.setAttribute("class", "list-group-item");
-						li.appendChild(document.createTextNode("Mutant " + results.data[k][0] + " // "));
-						status_span = document.createElement("span");
-						status_span.setAttribute("class", "killed-text");
-						status_span.innerHTML = "KILLED";
-						li.appendChild(status_span);
-						li.appendChild(document.createElement("br"));
-						li.appendChild(document.createElement("br"));
-						mutant_text = document.createElement("p");
-						mutant_text.innerHTML = results.data[i][2];
-						li.appendChild(mutant_text);
+						li = createlistitem(results.data[k]);
 						list.appendChild(li);
 					}
 				}
