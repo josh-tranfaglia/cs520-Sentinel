@@ -132,8 +132,12 @@
 			var code_2text = document.createElement("code");
 			code_1text.innerHTML = code_strings[0];
 			code_2text.innerHTML = code_strings[1];
+			var og_text = document.createTextNode("Original: ");
+			var mut_text = document.createTextNode("Mutated: ");
+			p2.appendChild(og_text);
 			p2.appendChild(code_1text);
 			p2.appendChild(document.createElement("br"));
+			p2.appendChild(mut_text);
 			p2.appendChild(code_2text);
 			outer_p.appendChild(p2);
 
