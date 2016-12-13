@@ -21,13 +21,13 @@ After terminal questions:
 Get File Path for the Mutation CSV
 * sample file path to killed.csv (if you are in the triangle example): "./mutation_results/killed.csv"
 '''
-path_to_killed_csv = input("Please enter path to Mutation Killed CSV: ")
+path_to_killed_csv = input("Please enter path to Mutation Killed CSV(in quotes ""): ")
 
 '''
 Get File Path for the Show Mutant <ID> Shell Script
 * sample file path to show_mutant.sh (if you are in the triangle example): "./show_mutant.sh"
 '''
-path_to_show_mutant_sh_scrpt = input("Please enter path to Show Mutatnt Shell Script: ")
+path_to_show_mutant_sh_scrpt = input("Please enter path to Show Mutatnt Shell Script(in quotes ""): ")
 
 
 '''
