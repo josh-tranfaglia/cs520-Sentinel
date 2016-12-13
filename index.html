@@ -56,7 +56,8 @@
 								<tr><td>Mutants Generated: <span id="tm"></span></td></tr>
 								<tr><td>Mutants Killed: <span id="tk"></span></td></tr>
 								<tr><td>Mutants Living: <span id="tl"></span></td></tr>
-								<tr><td>Run-time (seconds): <span id="rt"></span></td></tr>
+								<tr><td>Percent Killed: <span id="pk"></span></td></tr>
+								<tr><td>Percent Living: <span id="pl"></span></td></tr>
 							</tbody>
 						</table>
 					</div>
@@ -79,7 +80,8 @@
 		total_mutants = 0;
 		total_killed = 0;
 		total_live = 0;
-		run_time = 0;
+		perc_killed = 0;
+		perc_living = 0;
 
 		parsed_data = undefined;
 ;
@@ -91,7 +93,8 @@
 		document.getElementById("tm").innerHTML= total_mutants;
 		document.getElementById("tk").innerHTML= total_killed;
 		document.getElementById("tl").innerHTML= total_live;
-		document.getElementById("rt").innerHTML= run_time;
+		document.getElementById("pk").innerHTML= perc_killed + "%";
+		document.getElementById("pl").innerHTML= perc_living + "%";
  
 		function shuffle(selected) {
 			currFilter = selected;
@@ -120,11 +123,12 @@
 			var split_text = text.split("@@");
 			var first_split = split_text[2].split("|-");
 			var code_strings = first_split[1].split("|+");
+			code_strings[1] = code_strings[1].slice(0, -1);
 			
 			var outer_p = document.createElement("p");
 			
 			var p1 = document.createElement("p");
-			p1.innerHTML = split_text[0] + " // " + split_text[1];
+			p1.innerHTML = split_text[0];
 			outer_p.appendChild(p1);
 
 			var p2 = document.createElement("p");
@@ -132,8 +136,13 @@
 			var code_2text = document.createElement("code");
 			code_1text.innerHTML = code_strings[0];
 			code_2text.innerHTML = code_strings[1];
+			var line_num_text = document.createTextNode(split_text[1]);
+			var line_num = document.createTextNode("Line Number: ");
 			var og_text = document.createTextNode("Original: ");
 			var mut_text = document.createTextNode("Mutated: ");
+			p2.appendChild(line_num);
+			p2.appendChild(line_num_text);
+			p2.appendChild(document.createElement("br"));
 			p2.appendChild(og_text);
 			p2.appendChild(code_1text);
 			p2.appendChild(document.createElement("br"));
@@ -224,10 +233,16 @@
 					total_mutants++;
 				}
 			}
+
+			perc_killed = (total_killed/total_mutants) * 100;
+			perc_living = (total_live/total_mutants) * 100;
+
 			// display the data
 			document.getElementById("tm").innerHTML= total_mutants;
 			document.getElementById("tk").innerHTML= total_killed;
 			document.getElementById("tl").innerHTML= total_live;
+			document.getElementById("pk").innerHTML= perc_killed + "%";
+			document.getElementById("pl").innerHTML= perc_living + "%";
 
 			// display the list of mutants
 			create_lists(results);
