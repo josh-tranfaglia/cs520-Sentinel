@@ -159,6 +159,16 @@
 		function create_list_item(item) {
 			var li = document.createElement("li");
 			li.setAttribute("class", "list-group-item");
+
+			li.appendChild(document.createTextNode("Unkillable Mutant: "));
+      var unkillable_checkbox = document.createElement('input');
+      unkillable_checkbox.type = "checkbox";
+      unkillable_checkbox.name = "UnkillableMutant";
+      unkillable_checkbox.value = "";
+      unkillable_checkbox.class = "unkillable-mutant";
+      li.appendChild(unkillable_checkbox);
+			li.appendChild(document.createElement("br"));
+
 			li.appendChild(document.createTextNode("Mutant " + item[0] + " // "));
 			var status_span = document.createElement("span");
 			if (item[1] == "LIVE") {
