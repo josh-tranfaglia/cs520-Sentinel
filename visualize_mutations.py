@@ -1,4 +1,5 @@
 import pdb
+import sys
 import csv
 import subprocess
 
@@ -16,18 +17,40 @@ After terminal questions:
 1D. Run through hash/object and save data to another file
 '''
 
+class CSVParser():
+    def read_csv(self, file_name, data_store):
+        '''
+        Open Killed.CSV and load data in here
+        '''
+        index_counter = 0
+        with open(file_name) as csvfile:
+            readCSV = csv.reader(csvfile, delimiter=',')
+            for row in readCSV:
+                mutant_id = row[0]
+                mutant_status = row[1]
+                data_store[mutant_id] = mutant_status
+        return data_store
+
+'''
+Ask what file type
+Only allow csv
+'''
+file_type = input("What file type is your report in? ")
+file_str = str(file_type)
+if str(file_type) != 'csv':
+    sys.exit("We only support CSV Files for now")
 
 '''
 Get File Path for the Mutation CSV
 * sample file path to killed.csv (if you are in the triangle example): "./mutation_results/killed.csv"
 '''
-path_to_killed_csv = input("Please enter path to Mutation Killed CSV(in quotes ""): ")
+path_to_killed_csv = input("Please enter path to Mutation Killed CSV(in quotes ''): ")
 
 '''
 Get File Path for the Show Mutant <ID> Shell Script
 * sample file path to show_mutant.sh (if you are in the triangle example): "./show_mutant.sh"
 '''
-path_to_show_mutant_sh_scrpt = input("Please enter path to Show Mutatnt Shell Script(in quotes ""): ")
+path_to_show_mutant_sh_scrpt = input("Please enter path to Show Mutatnt Shell Script(in quotes ''): ")
 
 
 '''
@@ -35,20 +58,9 @@ Mutant ID and Status Dictionary
 '''
 mutant_id_status = {}
 
+parser = CSVParser()
+parser.read_csv(path_to_killed_csv, mutant_id_status)
 
-def read_csv(file_name, data_store):
-    '''
-    Open Killed.CSV and load data in here
-    '''
-    index_counter = 0
-    with open(file_name) as csvfile:
-        readCSV = csv.reader(csvfile, delimiter=',')
-        for row in readCSV:
-            mutant_id = row[0]
-            mutant_status = row[1]
-            data_store[mutant_id] = mutant_status
-
-read_csv(path_to_killed_csv, mutant_id_status)
 
 '''
 1. Iterate through Mutant ID/Status Data Strcuture
