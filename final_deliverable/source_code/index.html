@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<!-- CS 520 Sentinel graphical interface -->
+<!-- Alyssa Seifert, Omar Ismail, Stephen Palagi, Josh Tranfaglia -->
+
+<html lang="en">
+	
+	<!-- HEAD -->
+	<head>
+		<title> CS 520 Sentinel</title>
+		<!-- libraries and stylesheets -->
+		<!-- boostrap, jqeury, custom css -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+  		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  		<link rel="stylesheet" type="text/css" href="sentinel.css">
+  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	  	<script src="PapaParse-4.1.2/papaparse.min.js"></script>
+	</head>
+	<!-- END HEAD -->
+
+	<!-- BODY -->
+	<body>
+		<!-- NAVBAR -->
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">CS 520 Sentinel</a>
+				</div>
+				<ul class="nav navbar-nav" id="filter-text">
+					<li class="active"><a href="#">Mutants</a></li>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#"><span id="filter-one"></span><span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#" onclick="shuffle(twoFilter)"><span id="filter-two"></span></a></li>
+							<li><a href="#" onclick="shuffle(threeFilter)"><span id="filter-three"></span></a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<!-- END NAVBAR -->
+
+		<!-- INTERFACE -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-3">
+					<div class="well well-sm">
+						<table class="table table-condensed borderless">
+							<thead>
+								<input type="file" id="csv-input" onchange="parse_csv()"></input><br>
+								<th>Summary</th>
+							</thead>
+							<tbody>
+								<tr><td>Mutants Generated: <span id="tm"></span></td></tr>
+								<tr><td>Mutants Killed: <span id="tk"></span></td></tr>
+								<tr><td>Mutants Living: <span id="tl"></span></td></tr>
+								<tr><td>Percent Killed: <span id="pk"></span></td></tr>
+								<tr><td>Percent Living: <span id="pl"></span></td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="col-md-9">
+					<ul class="list-group mutant-bg" id="display-list">
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- END INTERFACE -->
+
+		<!-- JAVASCRIPT -->
+		<script>
+		// various variables
+		filters = ["All", "Live", "Killed"];
+		currFilter = filters[0], twoFilter = filters[1], threeFilter = filters[2];
+
+		list_filler = '<li class="list-group-item" id="filler">No file selected!</li>';
+		display_list = list_filler;
+
+		total_mutants = 0;
+		total_killed = 0;
+		total_live = 0;
+		perc_killed = 0;
+		perc_living = 0;
+
+		parsed_data = undefined;
+;
+		// display em
+		document.getElementById("filter-one").innerHTML= currFilter;
+		document.getElementById("filter-two").innerHTML = twoFilter;
+		document.getElementById("filter-three").innerHTML = threeFilter;
+		document.getElementById("display-list").innerHTML = display_list;
+		document.getElementById("tm").innerHTML= total_mutants;
+		document.getElementById("tk").innerHTML= total_killed;
+		document.getElementById("tl").innerHTML= total_live;
+		document.getElementById("pk").innerHTML= perc_killed + "%";
+		document.getElementById("pl").innerHTML= perc_living + "%";
+ 
+		function shuffle(selected) {
+			currFilter = selected;
+			if (selected === filters[0]) {
+				twoFilter = filters[1];
+				threeFilter = filters[2];
+				create_lists(parsed_data);
+			} else if (selected == filters[1]) {
+				twoFilter = filters[0];
+				threeFilter = filters[2];
+				create_lists(parsed_data, selected);
+			} else {
+				twoFilter = filters[0];
+				threeFilter = filters[1];
+				create_lists(parsed_data, selected);
+			}
+			document.getElementById("filter-one").innerHTML= currFilter;
+			document.getElementById("filter-two").innerHTML = twoFilter;
+			document.getElementById("filter-three").innerHTML = threeFilter;
+			return;
+		}
+
+		// formats the mutants text for the list item
+		function format_mutant_text(text) {
+
+			var split_text = text.split("@@");
+			var first_split = split_text[2].split("|-");
+			var code_strings = first_split[1].split("|+");
+			code_strings[1] = code_strings[1].slice(0, -1);
+			
+			var outer_p = document.createElement("p");
+			
+			var p1 = document.createElement("p");
+			p1.innerHTML = split_text[0];
+			outer_p.appendChild(p1);
+
+			var p2 = document.createElement("p");
+			var code_1text = document.createElement("code");
+			var code_2text = document.createElement("code");
+			code_1text.innerHTML = code_strings[0];
+			code_2text.innerHTML = code_strings[1];
+			var line_num_text = document.createTextNode(split_text[1]);
+			var line_num = document.createTextNode("Line Number: ");
+			var og_text = document.createTextNode("Original: ");
+			var mut_text = document.createTextNode("Mutated: ");
+			p2.appendChild(line_num);
+			p2.appendChild(line_num_text);
+			p2.appendChild(document.createElement("br"));
+			p2.appendChild(og_text);
+			p2.appendChild(code_1text);
+			p2.appendChild(document.createElement("br"));
+			p2.appendChild(mut_text);
+			p2.appendChild(code_2text);
+			outer_p.appendChild(p2);
+
+			return outer_p;
+		}
+
+		// creates a list item given a mutant
+		function create_list_item(item) {
+			var li = document.createElement("li");
+			li.setAttribute("class", "list-group-item");
+
+			li.appendChild(document.createTextNode("Unkillable Mutant: "));
+      var unkillable_checkbox = document.createElement('input');
+      unkillable_checkbox.type = "checkbox";
+      unkillable_checkbox.name = "UnkillableMutant";
+      unkillable_checkbox.value = "";
+      unkillable_checkbox.class = "unkillable-mutant";
+      li.appendChild(unkillable_checkbox);
+			li.appendChild(document.createElement("br"));
+
+			li.appendChild(document.createTextNode("Mutant " + item[0] + " // "));
+			var status_span = document.createElement("span");
+			if (item[1] == "LIVE") {
+				status_span.setAttribute("class", "living-text");
+				status_span.innerHTML = "LIVE";
+			} else if (item[1] == "FAIL") {
+				status_span.setAttribute("class", "killed-text");
+				status_span.innerHTML = "KILLED";
+			}
+			li.appendChild(status_span);
+			li.appendChild(document.createElement("br"));
+			var mutant_text = format_mutant_text(item[2]);
+			li.appendChild(mutant_text);
+			return li;
+		}
+
+		// TODO: really need to abstract this
+		// display the mutants
+		function create_lists(results, filter) {
+			// get the list from the form
+			var list = document.getElementById("display-list");
+
+			// the list item we are going to add to the list
+			var li, status_span, mutant_text;
+
+			if (filter == undefined) {
+				while(list.firstChild) {
+					list.removeChild(list.firstChild);
+				}
+				for (var i = 0; i < results.data.length; i++) {
+					// if it's a mutant, create the item and append it.
+					if (results.data[i][1] == "LIVE") {
+						li = create_list_item(results.data[i]);
+						list.appendChild(li);
+					} else if (results.data[i][1] == "FAIL") {
+						li = create_list_item(results.data[i]);
+						list.appendChild(li);
+					}
+				}
+			} else if (filter == filters[1]) {
+				while(list.firstChild) {
+					list.removeChild(list.firstChild);
+				}
+				for (var j = 0; j < results.data.length; j++) {
+					if (results.data[j][1] == "LIVE") {
+						li = create_list_item(results.data[j]);
+						list.appendChild(li);
+					}
+				}
+			} else if (filter == filters[2]) {
+				while(list.firstChild) {
+					list.removeChild(list.firstChild);
+				}
+				for (var k = 0; k < results.data.length; k++) {
+					if (results.data[k][1] == "FAIL") {
+						li = create_list_item(results.data[k]);
+						list.appendChild(li);
+					}
+				}
+			}
+
+		}
+
+		// fill in the stats panel
+		function get_stats(results) {
+			// iterate over the mutants
+			for (var i = 0; i < results.data.length; i++) {
+				// sanity checks, there are a few stray entries that need to be filtered out
+				if (results.data[i][1] == "LIVE") {
+					total_live++;
+					total_mutants++;
+				} else if (results.data[i][1] == "FAIL") {
+					total_killed++;
+					total_mutants++;
+				}
+			}
+
+			perc_killed = (total_killed/total_mutants) * 100;
+			perc_living = (total_live/total_mutants) * 100;
+
+			// display the data
+			document.getElementById("tm").innerHTML= total_mutants;
+			document.getElementById("tk").innerHTML= total_killed;
+			document.getElementById("tl").innerHTML= total_live;
+			document.getElementById("pk").innerHTML= perc_killed + "%";
+			document.getElementById("pl").innerHTML= perc_living + "%";
+
+			// display the list of mutants
+			create_lists(results);
+		}
+
+		// called by the file input tag
+		function parse_csv() {
+
+			// reset stats if new file is chosen
+			total_mutants = 0;
+			total_killed = 0;
+			total_live = 0;
+			run_time = 0;
+
+			var file = document.getElementById("csv-input");
+
+			if ('files' in file) {
+				// if there is no file, just print to console
+				if (file.files.length == 0) {
+					console.log("select a csv file");
+				} else {
+					// if there was a file selected, parse with PapaParse and display the results in the console
+					// you can view the structure of the results there
+					Papa.parse(file.files[0], {
+						complete: function(results) {
+							console.log("Finished:", results);
+							// fill i the stats
+							parsed_data = results;	
+							get_stats(parsed_data);
+						} 
+					});
+				}
+			}
+		}
+
+		// creates 2D array of mutant data from CSV file
+		function processData(allText) {
+			var allTextLines = allText.split(/\r\n|\n/);
+			var headers = allTextLines[0].split(',',3);
+			var lines = [];
+
+			for (var i=1; i<allTextLines.length; i++) {
+				//split at first 2 commas then first 2 "@@"
+			    var data = allTextLines[i].split(',',3).split("@@",3); 
+			    if (data.length == headers.length+2) { //==5
+			        lines.push(data);
+			    }
+			}
+			return lines;
+		}
+
+		//takes 2D array and makes it into an html unordered list of mutant string data
+		function populateMutantList(lines){
+			var mutantsList = document.createElement('ul');
+				mutantsList.class = "list-group mutant-bg"
+		    for(var i = 0; i < lines.length; i++) {
+		        // Create the list item:
+		      //  var mutantLiElem = document.createElement('li');
+		        	var mutant = document.createElement('ul');
+		        	for(var j = 1 ; j<lines.length ; j++){
+		        		var mutantLine = lines[j]
+		        		var mutantAttribute = document.createElement("li");
+		        		mutantAttribute.appendChild(document.createTextNode(mutantLine[j]));
+		        		mutantAttribute.class = "list-group-item"
+		        		mutant.appendChild(mutantAttribute);
+		        	}
+		        // Add it to the list:
+		        mutantsList.appendChild(mutant);
+    		}
+    		// Finally, return the constructed list:
+    		return mutantList;
+		}
+
+		</script>
+		<!-- END JAVSCRIPT -->
+	</body>
+	<!-- END BODY -->
+
+</html>	
