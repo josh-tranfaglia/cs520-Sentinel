@@ -1,0 +1,6 @@
+TestNo,TestName
+1,triangle.EquilateralTriangleTest
+2,triangle.InvalidTriangleTest
+3,triangle.IsoscelesTriangleTest
+4,triangle.ScaleneTriangleTest
+5,triangle.TriangleTest
